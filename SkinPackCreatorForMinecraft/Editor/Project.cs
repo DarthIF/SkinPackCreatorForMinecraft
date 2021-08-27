@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Editor {
 
         public Project(string folder) {
             this.folder = folder;
-            this.manifest = Files.ReadManifest(fileManifest(folder));
-            this.skins = Files.ReadSkins(fileSkins(folder));
+            this.manifest = Files.ReadManifest(pathManifest(folder));
+            this.skins = Files.ReadSkins(pathSkins(folder));
         }
 
         public Project(string folder, Manifest manifest, SkinsJson skins) {
@@ -68,8 +69,8 @@ namespace Editor {
         public static Project Instance => instance;
 
         public static bool IsProjectFolder(string folder) {
-            return File.Exists(fileManifest(folder))
-                && File.Exists(fileSkins(folder));
+            return File.Exists(pathManifest(folder))
+                && File.Exists(pathSkins(folder));
         }
         public static bool IsOpen() {
             return instance != null;
@@ -80,16 +81,33 @@ namespace Editor {
             return true;
         }
 
-        public static bool Save() {
+        public static bool SaveAll() {
             if (instance == null) return false;
 
             Save(instance.folder, instance.manifest, instance.skins);
 
             return true;
         }
+        public static bool SaveManifest() {
+            if (instance == null) return false;
+
+            Save(instance.folder, instance.manifest, null);
+
+            return true;
+        }
+        public static bool SaveSkins() {
+            if (instance == null) return false;
+
+            Save(instance.folder, null, instance.skins);
+
+            return true;
+        }
         private static void Save(string folder, Manifest manifest, SkinsJson skins) {
-            Files.WriteJson(fileManifest(folder), manifest);
-            Files.WriteJson(fileSkins(folder), skins);
+            if (manifest != null)
+                Files.WriteJson(pathManifest(folder), manifest);
+
+            if (skins != null)
+                Files.WriteJson(pathSkins(folder), skins);
 
         }
 
@@ -100,7 +118,7 @@ namespace Editor {
             if (instance == null) return false;
 
             // Salvar dados pendentes
-            Save();
+            SaveAll();
 
             // Criar um arquivo zip
             var folder = instance.folder;
@@ -108,7 +126,6 @@ namespace Editor {
 
             return true;
         }
-
         public static bool NewProject(string folder, string packName) {
             var manifest = new Manifest();
             var skins = new SkinsJson();
@@ -132,6 +149,46 @@ namespace Editor {
 
             instance = new Project(folder, manifest, skins);
             return true;
+        }
+
+        public static Image LoadImage(Skin skin) {
+            if (instance == null) return null;
+
+            var texture = Path.Combine(instance.folder, skin.Texture);
+            return Image.FromFile(texture);
+        }
+
+        public static void ImportImage(string location, Skin skin) {
+            if (instance == null) return;
+
+            var texture = Path.Combine(instance.folder, skin.Texture);
+            File.Delete(texture);
+            File.Copy(location, texture);
+        }
+        public static Skin NewSkin(string path) {
+            if (instance == null) return null;
+
+            var fileName = Path.GetFileName(path); 
+            var fileNameOnly = Path.GetFileNameWithoutExtension(path); 
+
+            // Criar a skin
+            var skin = new Skin();
+            skin.LocalizationName = fileNameOnly;
+            skin.Geometry = SkinUtils.NORMAL_GEOMETRY;
+            skin.Texture = fileName;
+            skin.Type = SkinUtils.FREE_TYPE;
+
+            // Adicionar
+            instance.skins.Skins.Add(skin);
+
+            // Copiar
+            var targetName = Path.Combine(instance.folder, fileName);
+            File.Copy(path, targetName);
+
+            // Salvar
+            SaveSkins();
+
+            return skin;
         }
 
         private static void FillVersion(string version, List<long> list) {
@@ -169,11 +226,11 @@ namespace Editor {
         }
 
         // Nomes dos arquivos
-        private static string fileManifest(string path) {
-            return $"{path}\\manifest.json";
+        private static string pathManifest(string path) {
+            return Path.Combine(path, "manifest.json");
         }
-        private static string fileSkins(string path) {
-            return $"{path}\\skins.json";
+        private static string pathSkins(string path) {
+            return Path.Combine(path, "skins.json");
         }
 
     }

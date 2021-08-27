@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,13 @@ namespace SkinPackCreatorForMinecraft {
         public EditorForm() {
             InitializeComponent();
         }
+
+        public void newSkin(string path) {
+            var skin = Project.NewSkin(path);
+
+            skinEditor1.SetSkin(skin);
+        }
+
 
 
         private void _OpenProperties(object sender, EventArgs e) {
@@ -74,6 +82,34 @@ namespace SkinPackCreatorForMinecraft {
             Project.Export(dialog.FileName);
 
             MessageBox.Show("Saved as: " + dialog.FileName);
+        }
+
+
+
+        private void _onClickAddSkin(object sender, EventArgs e) {
+            var dialog = new OpenFileDialog();
+            dialog.Title = "Select skin";
+            dialog.Filter = "Skin files (*.png)|*.png";
+
+            var result = dialog.ShowDialog();
+            if (result != DialogResult.OK || string.IsNullOrWhiteSpace(dialog.FileName))
+                return;
+
+            newSkin(dialog.FileName);
+        }
+
+        private void _onDropSkin(object sender, DragEventArgs e) {
+            var data = e.Data;
+            if (!data.GetDataPresent(DataFormats.FileDrop)) return;
+
+            var files = data.GetData(DataFormats.FileDrop) as string[];
+            foreach (var file in files) {
+                var ext = Path.GetExtension(file);
+                if (!string.Equals(ext, ".png")) continue;
+
+                newSkin(file);
+                break;
+            }
         }
 
 

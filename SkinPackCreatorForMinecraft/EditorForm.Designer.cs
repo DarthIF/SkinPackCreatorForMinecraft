@@ -27,6 +27,7 @@ namespace SkinPackCreatorForMinecraft {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorForm));
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
+            this.button1 = new System.Windows.Forms.Button();
             this.skinEditor1 = new SkinPackCreatorForMinecraft.SkinEditor();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
@@ -42,14 +43,17 @@ namespace SkinPackCreatorForMinecraft {
             // 
             // listBox1
             // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Location = new System.Drawing.Point(3, 32);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(220, 296);
+            this.listBox1.Size = new System.Drawing.Size(220, 300);
             this.listBox1.TabIndex = 0;
+            this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this._onDropSkin);
             // 
             // toolStripContainer1
             // 
@@ -57,15 +61,16 @@ namespace SkinPackCreatorForMinecraft {
             // 
             // toolStripContainer1.ContentPanel
             // 
+            this.toolStripContainer1.ContentPanel.Controls.Add(this.button1);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.skinEditor1);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.listBox1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(624, 296);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(624, 336);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.LeftToolStripPanelVisible = false;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(624, 321);
+            this.toolStripContainer1.Size = new System.Drawing.Size(624, 361);
             this.toolStripContainer1.TabIndex = 3;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -73,15 +78,28 @@ namespace SkinPackCreatorForMinecraft {
             // 
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(3, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(220, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Add Skin";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this._onClickAddSkin);
+            // 
             // skinEditor1
             // 
             this.skinEditor1.AllowDrop = true;
+            this.skinEditor1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.skinEditor1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.skinEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skinEditor1.Location = new System.Drawing.Point(220, 0);
+            this.skinEditor1.Location = new System.Drawing.Point(229, 5);
             this.skinEditor1.Name = "skinEditor1";
-            this.skinEditor1.Size = new System.Drawing.Size(404, 296);
+            this.skinEditor1.Size = new System.Drawing.Size(395, 333);
             this.skinEditor1.TabIndex = 1;
+            this.skinEditor1.Visible = false;
             // 
             // toolStrip1
             // 
@@ -145,9 +163,11 @@ namespace SkinPackCreatorForMinecraft {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 321);
+            this.ClientSize = new System.Drawing.Size(624, 361);
             this.Controls.Add(this.toolStripContainer1);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(640, 400);
+            this.MinimumSize = new System.Drawing.Size(640, 400);
             this.Name = "EditorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Skin Pack";
@@ -173,6 +193,7 @@ namespace SkinPackCreatorForMinecraft {
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private SkinEditor skinEditor1;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.Button button1;
     }
 }
 

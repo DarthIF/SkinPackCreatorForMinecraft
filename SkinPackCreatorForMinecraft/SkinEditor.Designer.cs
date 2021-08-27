@@ -24,80 +24,131 @@ namespace SkinPackCreatorForMinecraft {
         /// o conteúdo deste método com o editor de código.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SkinEditor));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox_name = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButton_slim = new System.Windows.Forms.RadioButton();
+            this.radioButton_normal = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.radioButton_paid = new System.Windows.Forms.RadioButton();
+            this.radioButton_free = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(158, 32);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(64, 64);
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this._onPickImage);
             // 
-            // radioButton2
+            // textBox_name
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(81, 157);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(48, 19);
-            this.radioButton2.TabIndex = 8;
-            this.radioButton2.Text = "Slim";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(10, 157);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(65, 19);
-            this.radioButton1.TabIndex = 7;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Normal";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBox_name.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(10, 128);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(360, 23);
-            this.textBox1.TabIndex = 6;
-            this.textBox1.Text = "Portegas D Ace";
+            this.textBox_name.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBox_name.Location = new System.Drawing.Point(10, 128);
+            this.textBox_name.Name = "textBox_name";
+            this.textBox_name.Size = new System.Drawing.Size(360, 23);
+            this.textBox_name.TabIndex = 6;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(295, 208);
+            this.button1.Location = new System.Drawing.Point(295, 308);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 10;
             this.button1.Text = "Save";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this._onSaveClick);
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(214, 208);
+            this.button2.Location = new System.Drawing.Point(214, 308);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 11;
             this.button2.Text = "Close";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this._onCloseClick);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButton_slim);
+            this.groupBox1.Controls.Add(this.radioButton_normal);
+            this.groupBox1.Location = new System.Drawing.Point(10, 157);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(360, 56);
+            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Geometry";
+            // 
+            // radioButton_slim
+            // 
+            this.radioButton_slim.AutoSize = true;
+            this.radioButton_slim.Location = new System.Drawing.Point(79, 22);
+            this.radioButton_slim.Name = "radioButton_slim";
+            this.radioButton_slim.Size = new System.Drawing.Size(48, 19);
+            this.radioButton_slim.TabIndex = 10;
+            this.radioButton_slim.Text = "Slim";
+            this.radioButton_slim.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_normal
+            // 
+            this.radioButton_normal.AutoSize = true;
+            this.radioButton_normal.Checked = true;
+            this.radioButton_normal.Location = new System.Drawing.Point(8, 22);
+            this.radioButton_normal.Name = "radioButton_normal";
+            this.radioButton_normal.Size = new System.Drawing.Size(65, 19);
+            this.radioButton_normal.TabIndex = 9;
+            this.radioButton_normal.TabStop = true;
+            this.radioButton_normal.Text = "Normal";
+            this.radioButton_normal.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radioButton_paid);
+            this.groupBox2.Controls.Add(this.radioButton_free);
+            this.groupBox2.Location = new System.Drawing.Point(10, 220);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(360, 56);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Type";
+            // 
+            // radioButton_paid
+            // 
+            this.radioButton_paid.AutoSize = true;
+            this.radioButton_paid.Location = new System.Drawing.Point(61, 22);
+            this.radioButton_paid.Name = "radioButton_paid";
+            this.radioButton_paid.Size = new System.Drawing.Size(48, 19);
+            this.radioButton_paid.TabIndex = 1;
+            this.radioButton_paid.Text = "Paid";
+            this.radioButton_paid.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_free
+            // 
+            this.radioButton_free.AutoSize = true;
+            this.radioButton_free.Checked = true;
+            this.radioButton_free.Location = new System.Drawing.Point(8, 22);
+            this.radioButton_free.Name = "radioButton_free";
+            this.radioButton_free.Size = new System.Drawing.Size(47, 19);
+            this.radioButton_free.TabIndex = 0;
+            this.radioButton_free.TabStop = true;
+            this.radioButton_free.Text = "Free";
+            this.radioButton_free.UseVisualStyleBackColor = true;
             // 
             // SkinEditor
             // 
@@ -105,15 +156,20 @@ namespace SkinPackCreatorForMinecraft {
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.radioButton2);
-            this.Controls.Add(this.radioButton1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBox_name);
             this.Name = "SkinEditor";
-            this.Size = new System.Drawing.Size(380, 240);
+            this.Size = new System.Drawing.Size(380, 340);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this._onDropFile);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -122,10 +178,14 @@ namespace SkinPackCreatorForMinecraft {
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox_name;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioButton_slim;
+        private System.Windows.Forms.RadioButton radioButton_normal;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton radioButton_paid;
+        private System.Windows.Forms.RadioButton radioButton_free;
     }
 }
