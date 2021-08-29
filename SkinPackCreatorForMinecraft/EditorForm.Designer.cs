@@ -99,7 +99,7 @@ namespace SkinPackCreatorForMinecraft {
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.toolStrip1.Location = new System.Drawing.Point(3, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(167, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(136, 25);
             this.toolStrip1.TabIndex = 0;
             // 
             // toolStripDropDownButton1
@@ -123,14 +123,14 @@ namespace SkinPackCreatorForMinecraft {
             this.toolStripMenuItem6,
             this.toolStripMenuItem7});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.toolStripMenuItem1.Text = "Open";
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Image = global::SkinPackCreatorForMinecraft.Properties.Resources.Folder_Grass;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(147, 22);
             this.toolStripMenuItem6.Text = "Project Folder";
             this.toolStripMenuItem6.Click += new System.EventHandler(this._OnMenuOpenFolder);
             // 
@@ -138,26 +138,26 @@ namespace SkinPackCreatorForMinecraft {
             // 
             this.toolStripMenuItem7.Image = global::SkinPackCreatorForMinecraft.Properties.Resources.Grass;
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(147, 22);
             this.toolStripMenuItem7.Text = ".mcpack";
             this.toolStripMenuItem7.Click += new System.EventHandler(this._OnMenuOpenPackFile);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(145, 6);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(148, 22);
             this.toolStripMenuItem3.Text = "New SkinPack";
             this.toolStripMenuItem3.Click += new System.EventHandler(this._OnMenuNewProject);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(145, 6);
             // 
             // toolStripMenuItem4
             // 
@@ -166,14 +166,14 @@ namespace SkinPackCreatorForMinecraft {
             this.toolStripMenuItem8});
             this.toolStripMenuItem4.Image = global::SkinPackCreatorForMinecraft.Properties.Resources.Chest;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(148, 22);
             this.toolStripMenuItem4.Text = "Export";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Image = global::SkinPackCreatorForMinecraft.Properties.Resources.Grass;
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(119, 22);
             this.toolStripMenuItem5.Text = ".mcpack";
             this.toolStripMenuItem5.Click += new System.EventHandler(this._OnMenuExportMcpack);
             // 
@@ -181,7 +181,7 @@ namespace SkinPackCreatorForMinecraft {
             // 
             this.toolStripMenuItem8.Image = global::SkinPackCreatorForMinecraft.Properties.Resources.Book;
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(119, 22);
             this.toolStripMenuItem8.Text = ".zip";
             this.toolStripMenuItem8.Click += new System.EventHandler(this._OnMenuExportZip);
             // 
@@ -200,7 +200,7 @@ namespace SkinPackCreatorForMinecraft {
             // 
             this.toolStripMenuItem2.Image = global::SkinPackCreatorForMinecraft.Properties.Resources.Book;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(120, 22);
             this.toolStripMenuItem2.Text = "Manifest";
             this.toolStripMenuItem2.Click += new System.EventHandler(this._OnMenuManifestEdit);
             // 
@@ -210,12 +210,13 @@ namespace SkinPackCreatorForMinecraft {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 361);
             this.Controls.Add(this.toolStripContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(640, 400);
             this.MinimumSize = new System.Drawing.Size(640, 400);
             this.Name = "EditorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Skin Pack";
+            this.Text = "Skin Pack Creator";
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();

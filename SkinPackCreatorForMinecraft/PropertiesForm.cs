@@ -17,8 +17,6 @@ namespace SkinPackCreatorForMinecraft {
         private string targetFolder = null;
         private Action onProject = null;
 
-        private Project newProject = null;
-
 
         public PropertiesForm() {
             InitializeComponent();
@@ -36,7 +34,7 @@ namespace SkinPackCreatorForMinecraft {
         }
 
 
-        private void setData(Project project) {
+        private void setData(IProject project) {
             project.Name = textBox_packName.Text;
             project.PackUUID = textBox_packUuid.Text;
             project.PackVersion = textBox_packVersion.Text;
@@ -46,8 +44,8 @@ namespace SkinPackCreatorForMinecraft {
 
 
         private void onCreateNew() {
-            newProject = Project.CreateProject();
-            newProject.folder = targetFolder;
+            ProjectBuilder.Begin();
+            ProjectBuilder.Instance.Folder = targetFolder;
 
             // Criar novo
             textBox_packName.Text = "";
@@ -67,16 +65,21 @@ namespace SkinPackCreatorForMinecraft {
         }
 
         private void onSaveNew() {
-            setData(newProject);
+            var builder = ProjectBuilder.Instance;
 
-            // Pasta para o projeto
-            var folder = Path.Combine(newProject.folder, newProject.Name);
-            Directory.CreateDirectory(newProject.folder);
+            // Definir os dados
+            setData(builder);
 
-            newProject.folder = folder;
+            // Criar a pasta do projeto
+            builder.Folder = Path.Combine(builder.Folder, builder.Name);
+            builder.CreateDirectory();
 
-            // Save data
-            Project.SaveNewProject(newProject);
+            // Completar
+            ProjectBuilder.End();
+
+            // Evento
+            if (onProject != null)
+                onProject.Invoke();
         }
         private void onSaveProject() {
             setData(Project.Instance);

@@ -16,7 +16,6 @@ namespace SkinPackCreatorForMinecraft {
     public partial class EditorForm : Form {
         private static readonly string FILTER = "Minecraft Resource Pack|*.mcpack|Zip file|*.zip";
 
-
         public EditorForm() {
             InitializeComponent();
 
@@ -42,7 +41,6 @@ namespace SkinPackCreatorForMinecraft {
                 projectExplorer1.RemoveItem(index);
             });
         }
-
 
         public void UpdateProjectSkins() {
             if (!Project.IsOpen) return;
@@ -130,11 +128,11 @@ namespace SkinPackCreatorForMinecraft {
         }
 
         private void _OnMenuExportMcpack(object sender, EventArgs e) {
-            Export(2);
+            Export(1);
         }
 
         private void _OnMenuExportZip(object sender, EventArgs e) {
-            Export(1);
+            Export(2);
         }
 
 

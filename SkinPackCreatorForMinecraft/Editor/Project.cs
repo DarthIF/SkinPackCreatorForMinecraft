@@ -12,7 +12,7 @@ using Utils;
 
 namespace Editor {
 
-    public class Project {
+    public class Project : IProject {
         public static readonly string MANIFEST_FILE = "manifest.json";
         public static readonly string SKINS_FILE = "skins.json";
         public static readonly string TEXTS_DIRECTORY = "texts";
@@ -122,6 +122,7 @@ namespace Editor {
             return true;
         }
 
+        // Salvar
         public static bool SaveAll() {
             if (instance == null) return false;
 
@@ -167,6 +168,7 @@ namespace Editor {
             Files.WriteJson(pathSkins(folder), skins);
         }
 
+        // .mcpack
         public static bool Export(string targetFile) {
             // Referencia:
             // https://docs.microsoft.com/pt-br/dotnet/api/system.io.compression.zipfile.createfromdirectory?view=net-5.0
@@ -223,14 +225,15 @@ namespace Editor {
             SaveAll();
         }
 
+        // Criar um projeto
+        public static void CreateProject(ProjectBuilder builder, Manifest manifest, SkinsJson skins) {
+            instance = new Project(builder.Folder, manifest, skins);
 
-        public static Image LoadImage(Skin skin) {
-            if (instance == null) return null;
-
-            var texture = Path.Combine(instance.folder, skin.Texture);
-            return Image.FromFile(texture);
         }
 
+
+
+        // Skins
         public static void ReplaceTexture(string soucePath, Skin skin) {
             if (instance == null) return;
 
@@ -288,6 +291,13 @@ namespace Editor {
             return true;
         }
 
+        public static Image LoadImage(Skin skin) {
+            if (instance == null) return null;
+
+            var texture = Path.Combine(instance.folder, skin.Texture);
+            return Image.FromFile(texture);
+        }
+
 
         // Nomes dos arquivos
         private static string pathManifest(string path) {
@@ -296,6 +306,16 @@ namespace Editor {
         private static string pathSkins(string path) {
             return Path.Combine(path, SKINS_FILE);
         }
+
+    }
+
+    public interface IProject {
+
+        string Name { get; set; }
+        string PackUUID { get; set; }
+        string PackVersion { get; set; }
+        string SkinPackUUID { get; set; }
+        string SkinPackVersion { get; set; }
 
     }
 
