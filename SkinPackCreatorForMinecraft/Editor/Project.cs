@@ -13,25 +13,45 @@ using Utils;
 namespace Editor {
 
     public class Project {
+        public static readonly string MANIFEST_FILE = "manifest.json";
+        public static readonly string SKINS_FILE = "skins.json";
+        public static readonly string TEXTS_DIRECTORY = "texts";
+        public static readonly string LANG_FILE = "en_US.lang";
         private static Project instance;
 
         public string folder;
         public Manifest manifest;
         public SkinsJson skins;
 
+        private string textsFolder;
+        private string langFile;
+
+
         public Project(string folder) {
             this.folder = folder;
             this.manifest = Files.ReadManifest(pathManifest(folder));
             this.skins = Files.ReadSkins(pathSkins(folder));
-        }
 
+            initialize();
+        }
         public Project(string folder, Manifest manifest, SkinsJson skins) {
             this.folder = folder;
             this.manifest = manifest;
             this.skins = skins;
 
             // Salvar
-            Save(folder, manifest, skins);
+            Save(folder, manifest);
+            Save(folder, skins);
+
+            initialize();
+        }
+        private void initialize() {
+            this.textsFolder = Path.Combine(folder, TEXTS_DIRECTORY);
+            this.langFile = Path.Combine(textsFolder, LANG_FILE);
+
+            // Verificar a pasta "texts"
+            if (!Directory.Exists(textsFolder))
+                Directory.CreateDirectory(textsFolder);
         }
 
 
@@ -49,31 +69,52 @@ namespace Editor {
         }
         public string PackVersion {
             get => string.Join('.', manifest.Header.Version);
+            set => manifest.Header.Version = PackUtils.Version(value);
         }
         public string SkinPackUUID {
-            get {
-                var first = manifest.Modules.First();
-                return first.Uuid;
-            }
+            get => SkinModule.Uuid;
+            set => SkinModule.Uuid = value;
         }
         public string SkinPackVersion {
+            get => string.Join('.', SkinModule.Version);
+            set => SkinModule.Version = PackUtils.Version(value);
+        }
+
+        public Module SkinModule {
             get {
-                var first = manifest.Modules.First();
-                return string.Join('.', first.Version);
+                Module skin = null;
+                foreach (var module in manifest.Modules) {
+                    if (!PackUtils.IsSkinModule(module)) continue;
+
+                    skin = module;
+                    break;
+                }
+
+                // Criar um modulo de skin
+                if (skin == null) {
+                    var version = manifest.Header.Version;
+                    skin = PackUtils.CreateModule(version);
+
+                    manifest.Modules.Add(skin);
+
+                    Save(folder, manifest);
+                }
+
+                return skin;
             }
         }
 
+
+        public List<Skin> ListSkins => skins.Skins;
 
 
 
         public static Project Instance => instance;
 
+        public static bool IsOpen => instance != null;
         public static bool IsProjectFolder(string folder) {
             return File.Exists(pathManifest(folder))
                 && File.Exists(pathSkins(folder));
-        }
-        public static bool IsOpen() {
-            return instance != null;
         }
 
         public static bool Open(string folder) {
@@ -84,31 +125,46 @@ namespace Editor {
         public static bool SaveAll() {
             if (instance == null) return false;
 
-            Save(instance.folder, instance.manifest, instance.skins);
+            Save(instance.folder, instance.manifest);
+            Save(instance.folder, instance.skins);
 
             return true;
         }
         public static bool SaveManifest() {
             if (instance == null) return false;
 
-            Save(instance.folder, instance.manifest, null);
+            Save(instance.folder, instance.manifest);
 
             return true;
         }
         public static bool SaveSkins() {
             if (instance == null) return false;
 
-            Save(instance.folder, null, instance.skins);
+            // Salvar
+            Save(instance.folder, instance.skins);
+
+            // Criar um Lang
+            var lang = new LangHelper(instance.Name);
+            foreach (var skin in instance.ListSkins) {
+                lang.addSkin(skin);
+            }
+
+            // Salvar o lang
+            Files.WriteLang(instance.langFile, lang);
 
             return true;
         }
-        private static void Save(string folder, Manifest manifest, SkinsJson skins) {
-            if (manifest != null)
-                Files.WriteJson(pathManifest(folder), manifest);
+        private static void Save(string folder, Manifest manifest) {
+            if (manifest == null) return;
 
-            if (skins != null)
-                Files.WriteJson(pathSkins(folder), skins);
+            // Salvar o .json
+            Files.WriteJson(pathManifest(folder), manifest);
+        }
+        private static void Save(string folder, SkinsJson skins) {
+            if (skins == null) return;
 
+            // Salvar o .json
+            Files.WriteJson(pathSkins(folder), skins);
         }
 
         public static bool Export(string targetFile) {
@@ -126,7 +182,19 @@ namespace Editor {
 
             return true;
         }
-        public static bool NewProject(string folder, string packName) {
+        public static bool Import(string importFile) {
+            var rootDir = Path.GetDirectoryName(importFile);
+            var nameDir = Path.GetFileNameWithoutExtension(importFile);
+            var location = Path.Combine(rootDir, nameDir);
+
+            // Extrair o .mcpack para uma pasta e abri-la
+            ZipFile.ExtractToDirectory(importFile, location);
+
+            return Open(location);
+        }
+
+
+        public static Project CreateProject(string packName = "") {
             var manifest = new Manifest();
             var skins = new SkinsJson();
 
@@ -136,10 +204,10 @@ namespace Editor {
             manifest.Modules = new();
 
             manifest.Header.Name = packName;
-            manifest.Header.Uuid = NewUUID();
+            manifest.Header.Uuid = PackUtils.RandomUUID();
             manifest.Header.Version = new();
-            FillVersion("1.0.0", manifest.Header.Version);
-            manifest.Modules.Add(NewModule());
+            PackUtils.Version(PackUtils.DEFAULT_VERSION, manifest.Header.Version);
+            PackUtils.CreateModuleFor(manifest.Modules);
 
             // Criar o SkinsJson
             skins.Geometry = "skinpacks/skins.json";
@@ -147,9 +215,14 @@ namespace Editor {
             skins.SerializeName = packName;
             skins.LocalizationName = packName;
 
-            instance = new Project(folder, manifest, skins);
-            return true;
+            return new Project("", manifest, skins);
         }
+        public static void SaveNewProject(Project project) {
+            instance = project;
+
+            SaveAll();
+        }
+
 
         public static Image LoadImage(Skin skin) {
             if (instance == null) return null;
@@ -158,25 +231,25 @@ namespace Editor {
             return Image.FromFile(texture);
         }
 
-        public static void ImportImage(string location, Skin skin) {
+        public static void ReplaceTexture(string soucePath, Skin skin) {
             if (instance == null) return;
 
             var texture = Path.Combine(instance.folder, skin.Texture);
             File.Delete(texture);
-            File.Copy(location, texture);
+            File.Copy(soucePath, texture);
         }
-        public static Skin NewSkin(string path) {
+        public static Skin ImportTexture(string path) {
             if (instance == null) return null;
 
-            var fileName = Path.GetFileName(path); 
-            var fileNameOnly = Path.GetFileNameWithoutExtension(path); 
+            var fileName = Path.GetFileName(path);
+            var fileNameOnly = Path.GetFileNameWithoutExtension(path);
 
             // Criar a skin
             var skin = new Skin();
             skin.LocalizationName = fileNameOnly;
-            skin.Geometry = SkinUtils.NORMAL_GEOMETRY;
+            skin.Geometry = PackUtils.GEOMETRY_NORMAL;
             skin.Texture = fileName;
-            skin.Type = SkinUtils.FREE_TYPE;
+            skin.Type = PackUtils.TYPE_FREE;
 
             // Adicionar
             instance.skins.Skins.Add(skin);
@@ -191,46 +264,37 @@ namespace Editor {
             return skin;
         }
 
-        private static void FillVersion(string version, List<long> list) {
-            var codes = version.Split('.', 3);
+        public static bool DeleteSkin(Skin skin) {
+            if (instance == null) return false;
 
-            int count = 0;
-            foreach (var code in codes) {
-                if (count == 3) break;
+            // Remover
+            instance.skins.Skins.Remove(skin);
+            SaveSkins();
 
-                int nun;
-                if (int.TryParse(code, out nun)) {
-                    list.Add(nun);
-                    count++;
+            // Apagar
+            var targetFile = Path.Combine(instance.folder, skin.Texture);
+
+            bool deleted = false;
+            while (deleted == false) {
+                try {
+                    File.Delete(targetFile);
+                    deleted = true;
+                } catch (IOException) {
+                    deleted = false;
                 }
             }
 
-            if (count == 3) return;
 
-            while (count < 3) {
-                list.Add(0);
-                count++;
-            }
+            return true;
         }
-        private static Module NewModule() {
-            var module = new Module();
-            module.Type = "skin_pack";
-            module.Uuid = NewUUID();
-            module.Version = new();
-            FillVersion("1.0.0", module.Version);
 
-            return module;
-        }
-        private static string NewUUID() {
-            return Guid.NewGuid().ToString();
-        }
 
         // Nomes dos arquivos
         private static string pathManifest(string path) {
-            return Path.Combine(path, "manifest.json");
+            return Path.Combine(path, MANIFEST_FILE);
         }
         private static string pathSkins(string path) {
-            return Path.Combine(path, "skins.json");
+            return Path.Combine(path, SKINS_FILE);
         }
 
     }

@@ -195,7 +195,7 @@ namespace SkinPackCreatorForMinecraft {
             this.Name = "PropertiesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Manifest properties";
-            this.Layout += new System.Windows.Forms.LayoutEventHandler(this._onCreate);
+            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

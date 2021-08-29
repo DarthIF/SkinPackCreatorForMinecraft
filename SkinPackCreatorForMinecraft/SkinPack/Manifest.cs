@@ -20,6 +20,7 @@ namespace SkinPack {
 
     public class Header {
         [JsonProperty("name")] public string Name { get; set; }
+        [JsonProperty("description")] public string Description { get; set; }
         [JsonProperty("uuid")] public string Uuid { get; set; }
         [JsonProperty("version")] public List<long> Version { get; set; }
 
@@ -27,6 +28,7 @@ namespace SkinPack {
 
     public class Module {
         [JsonProperty("type")] public string Type { get; set; }
+        [JsonProperty("description")] public string Description { get; set; }
         [JsonProperty("uuid")] public string Uuid { get; set; }
         [JsonProperty("version")] public List<long> Version { get; set; }
 

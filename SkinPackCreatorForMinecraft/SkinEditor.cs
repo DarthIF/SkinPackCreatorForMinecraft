@@ -10,12 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Utils;
 
 namespace SkinPackCreatorForMinecraft {
 
     public partial class SkinEditor : UserControl {
         private Skin skin;
         private string newImage = null;
+
+        private Action<Skin> onChanged = null;
+        private Action<Skin> onDeleted = null;
 
 
         public SkinEditor() {
@@ -30,6 +34,13 @@ namespace SkinPackCreatorForMinecraft {
             UpdateUI();
         }
 
+        public void SetOnChanged(Action<Skin> a) {
+            this.onChanged = a;
+        }
+        public void SetOnDeleted(Action<Skin> a) {
+            this.onDeleted = a;
+        }
+
 
         private void UpdateUI() {
             if (skin == null) return;
@@ -38,19 +49,18 @@ namespace SkinPackCreatorForMinecraft {
             textBox_name.Text = skin.LocalizationName;
 
             // Geometria 
-            var isNormal = SkinUtils.IsNormal(skin.Geometry);
+            var isNormal = PackUtils.IsNormal(skin.Geometry);
             radioButton_normal.Checked = isNormal;
             radioButton_slim.Checked = !isNormal;
 
             // Tipo
-            var isFree = SkinUtils.IsFree(skin.Type);
+            var isFree = PackUtils.IsFree(skin.Type);
             radioButton_free.Checked = isFree;
             radioButton_paid.Checked = !isFree;
 
             // Skin
             pictureBox1.Image = Project.LoadImage(skin);
         }
-
         private void setImage(string location) {
             pictureBox1.Image = Image.FromFile(location);
 
@@ -64,20 +74,43 @@ namespace SkinPackCreatorForMinecraft {
 
             // Novos valores
             skin.LocalizationName = textBox_name.Text;
-            skin.Geometry = SkinUtils.CalcGeometry(radioButton_normal.Checked, radioButton_slim.Checked);
-            skin.Type = SkinUtils.CalcType(radioButton_free.Checked, radioButton_paid.Checked);
+            skin.Geometry = PackUtils.CalcGeometry(radioButton_normal.Checked, radioButton_slim.Checked);
+            skin.Type = PackUtils.CalcType(radioButton_free.Checked, radioButton_paid.Checked);
 
             // Alteração na skin
             if (newImage != null) {
-                Project.ImportImage(newImage, skin);
+                Project.ReplaceTexture(newImage, skin);
                 newImage = null;
             }
 
             // Aplicar
             Project.SaveSkins();
+
+            // Evento
+            if (onChanged != null)
+                onChanged.Invoke(skin);
         }
 
         private void _onCloseClick(object sender, EventArgs e) {
+            // Esconder
+            this.Visible = false;
+        }
+
+
+        private void _onDeleteClick(object sender, EventArgs e) {
+            // Fechar a imagem
+            var image = pictureBox1.Image;
+            if (image != null)
+                image.Dispose();
+
+            // Evento
+            if (onDeleted != null)
+                onDeleted.Invoke(skin);
+
+            // Apagar o arquivo
+            Project.DeleteSkin(skin);
+
+            // Esconder
             this.Visible = false;
         }
 
@@ -109,6 +142,7 @@ namespace SkinPackCreatorForMinecraft {
             }
 
         }
+
     }
 
 }
